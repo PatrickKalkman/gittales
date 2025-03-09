@@ -29,7 +29,8 @@ jobs:
       
       - name: Install dependencies
         run: |
-          uv pip install -e ".[dev]"
+          uv pip install pytest ruff
+          uv pip install -e .
       
       - name: Lint with ruff
         run: uv run ruff check gittales tests
@@ -54,14 +55,17 @@ jobs:
           curl -LsSf https://astral.sh/uv/install.sh | sh
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
       
+      - name: Install hatch
+        run: uv pip install hatch tomli
+      
       - name: Build package
         run: uv run hatch build
       
       - name: Get package metadata
         id: metadata
         run: |
-          echo "pkg_name=$(python -c "import tomli; print(tomli.load(open('pyproject.toml', 'rb'))['project']['name'])")" >> $GITHUB_OUTPUT
-          echo "version=$(python -c "import tomli; print(tomli.load(open('pyproject.toml', 'rb'))['project']['version'])")" >> $GITHUB_OUTPUT
+          echo "pkg_name=$(uv run python -c "import tomli; print(tomli.load(open('pyproject.toml', 'rb'))['project']['name'])")" >> $GITHUB_OUTPUT
+          echo "version=$(uv run python -c "import tomli; print(tomli.load(open('pyproject.toml', 'rb'))['project']['version'])")" >> $GITHUB_OUTPUT
       
       - name: Store build artifacts
         uses: actions/upload-artifact@v4
