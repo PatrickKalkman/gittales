@@ -37,6 +37,13 @@ gittales analyze --days 30
 gittales analyze --repo /path/to/repo1 --repo /path/to/repo2
 ```
 
+You can also run GitTales directly without installation using uv:
+
+```bash
+# Run directly from GitHub repository
+uv run https://raw.githubusercontent.com/PatrickKalkman/gittales/refs/heads/master/gtr.py analyze --days 30
+```
+
 ## Features (Planned)
 
 - **Multi-repo Analysis**: Track work across all your projects
