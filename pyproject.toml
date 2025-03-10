@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "gittales"
-version = "0.1.2"
+version = "0.1.3"
 description = "Extract insights from your git commit history"
 readme = "README.md"
 requires-python = ">=3.11"
