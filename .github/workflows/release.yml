@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - 'v*'  # Trigger on version tags
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (without v prefix)'
+        required: true
+        default: ''
 
 jobs:
   notify-start:
@@ -47,13 +53,18 @@ jobs:
         id: metadata
         run: |
           echo "pkg_name=$(python -c "import tomli; print(tomli.load(open('pyproject.toml', 'rb'))['project']['name'])")" >> $GITHUB_OUTPUT
-          echo "version=$(python -c "import tomli; print(tomli.load(open('pyproject.toml', 'rb'))['project']['version'])")" >> $GITHUB_OUTPUT
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            echo "version=$(python -c "import tomli; print(tomli.load(open('pyproject.toml', 'rb'))['project']['version'])")" >> $GITHUB_OUTPUT
+          fi
       
       - name: Create GitHub Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           name: GitTales ${{ steps.metadata.outputs.version }}
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && format('v{0}', github.event.inputs.version) || github.ref_name }}
           files: dist/*
           generate_release_notes: true
           draft: false
