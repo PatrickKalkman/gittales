@@ -61,11 +61,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          skip-existing: true
-      
       - name: Set outputs
         id: build_info
         run: |
@@ -89,5 +84,4 @@ jobs:
             Status: ${{ needs.build-and-publish.result }}
             Version: ${{ needs.build-and-publish.outputs.version }}
             
-            📥 Available on PyPI now!
             📁 GitHub Release: ${{ needs.build-and-publish.outputs.release_url }}
